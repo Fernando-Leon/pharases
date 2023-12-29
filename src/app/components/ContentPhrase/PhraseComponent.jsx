@@ -51,6 +51,26 @@ const Phrase = () => {
   
     return () => { window.removeEventListener('resize', actualizarDimensiones); };
   }, [wrapper.current]);
+
+  useEffect(() => {
+    const handleDeviceOrientation = (event) => {
+      const tiket = wrapper.current;
+      tiket.style.transition = 'none';
+
+      const rotationX = Math.round(event.beta);
+      const rotationY = Math.round(event.gamma);
+
+      tiket.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+    };
+
+    // Suscríbete al evento deviceorientation
+    window.addEventListener("deviceorientation", handleDeviceOrientation, true);
+
+    // Limpia el efecto al desmontar el componente
+    return () => {
+      window.removeEventListener("deviceorientation", handleDeviceOrientation, true);
+    };
+  }, [wrapper.current]);
   
 
   const handleMouseMove = (e) => {
