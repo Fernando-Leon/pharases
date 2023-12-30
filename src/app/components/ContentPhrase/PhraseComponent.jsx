@@ -1,7 +1,6 @@
 'use client'
 import React, { useState, useEffect, useRef } from 'react';
 import ButtonComponent from '../Button/ButtonComponent';
-import Image from 'next/image';
 import FlowerComponent from '../Flower/FlowerComponent';
 
 async function getData() {
@@ -52,21 +51,17 @@ const Phrase = () => {
     return () => { window.removeEventListener('resize', actualizarDimensiones); };
   }, [wrapper.current]);
 
+  const handleDeviceOrientation = (e) => {
+    const tiket = wrapper.current;
+
+    const rotationX = Math.round(e.beta);
+    const rotationY = Math.round(e.gamma);
+
+  };
+
   useEffect(() => {
-    const handleDeviceOrientation = (event) => {
-      const tiket = wrapper.current;
-      tiket.style.transition = 'none';
-
-      const rotationX = Math.round(event.beta);
-      const rotationY = Math.round(event.gamma);
-
-      tiket.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
-    };
-
-    // Suscríbete al evento deviceorientation
     window.addEventListener("deviceorientation", handleDeviceOrientation, true);
 
-    // Limpia el efecto al desmontar el componente
     return () => {
       window.removeEventListener("deviceorientation", handleDeviceOrientation, true);
     };
@@ -81,7 +76,7 @@ const Phrase = () => {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    let nMult = 4;
+    let nMult = 1;
     
     const rotationY = ((y - dimensiones.height / 2) / (dimensiones.height / 2)) * nMult;
     const rotationX = ((x - dimensiones.width / 2) / (dimensiones.width / 2)) * nMult;
@@ -100,7 +95,7 @@ const Phrase = () => {
 
 
   return (
-    <div className="relative bg-transparent dark:bg-transparent flex flex-col w-full h-3/4 border-8 border-double border-purple dark:border-purple p-12 pt-24 pb-24 ease-in-out transition-all duration-500 shadow-[0_0_2px_#fff,inset_0_0_2px_#fff,0_0_5px_#c237db,0_0_15px_#c237db,0_0_30px_#c237db]" ref={wrapper} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
+    <div className="relative bg-transparent dark:bg-transparent flex flex-col w-full h-3/4 border-8 border-double border-purple dark:border-purple p-12 pt-24 pb-24 ease-in-out transition-all duration-500 shadow-2xl dark:shadow-[0_0_2px_#fff,inset_0_0_2px_#fff,0_0_5px_#c237db,0_0_15px_#c237db,0_0_30px_#c237db]" ref={wrapper} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
       
       <div className="flex flex-col gap-2 text-black dark:text-white">
         <p className=''>"{currentPhrase.phrase}"</p>
@@ -109,10 +104,10 @@ const Phrase = () => {
 
       <div className="absolute flex h-full items-center self-center top-0 left-0 z-10">
         <ButtonComponent
-          rounded
+          title='Previous'
           filledColor='fill-purple hover:saturate-200 dark:fill-oro dark:hover:saturate-200 z-30'
-          bgColor='transparent'
           rotate='-rotate-90'
+          bgColor='bg-transparent'
           onClick={() => setCurrentPhraseIndex((prevIndex) => Math.max(prevIndex - 1, 0))}
         />
       </div>
@@ -121,8 +116,9 @@ const Phrase = () => {
         <ButtonComponent
           filledColor='fill-purple hover:saturate-200 dark:fill-oro dark:hover:saturate-200 z-30'
           rounded
+          bgColor='bg-transparent'
+          title='Next'
           rotate='rotate-90'
-          bgColor='transparent'
           onClick={() => setCurrentPhraseIndex((prevIndex) => Math.min(prevIndex + 1, phrases.length - 1))}
         />
       </div>
